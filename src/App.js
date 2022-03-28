@@ -1,15 +1,16 @@
-import './index.css';
-import { ReactComponent as BellIcon } from './icons/bell.svg';
-import { ReactComponent as MessengerIcon } from './icons/messenger.svg';
-import { ReactComponent as CaretIcon } from './icons/caret.svg';
-import { ReactComponent as PlusIcon } from './icons/plus.svg';
-import { ReactComponent as CogIcon } from './icons/cog.svg';
-import { ReactComponent as ChevronIcon } from './icons/chevron.svg';
-import { ReactComponent as ArrowIcon } from './icons/arrow.svg';
-import { ReactComponent as BoltIcon } from './icons/bolt.svg';
+import "./index.css";
+import { ReactComponent as BellIcon } from "./icons/bell.svg";
+import { ReactComponent as MessengerIcon } from "./icons/messenger.svg";
+import { ReactComponent as CaretIcon } from "./icons/caret.svg";
+import { ReactComponent as PlusIcon } from "./icons/plus.svg";
+import { ReactComponent as CogIcon } from "./icons/cog.svg";
+import { ReactComponent as ChevronIcon } from "./icons/chevron.svg";
+import { ReactComponent as ArrowIcon } from "./icons/arrow.svg";
+import { ReactComponent as BoltIcon } from "./icons/bolt.svg";
+import React, { useState, useEffect, useRef } from "react";
+import { CSSTransition } from "react-transition-group";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { CSSTransition } from 'react-transition-group';
+const CSS_TRANSITION_TIMEOUT = 500;
 
 function App() {
   return (
@@ -42,20 +43,26 @@ function NavItem(props) {
         {props.icon}
       </a>
 
+      {/* show children if there is any */}
       {open && props.children}
     </li>
   );
 }
 
 function DropdownMenu() {
-  const [activeMenu, setActiveMenu] = useState('main');
+  // show content under "main" when dropdown menu is shown
+  const [activeMenu, setActiveMenu] = useState("main");
   const [menuHeight, setMenuHeight] = useState(null);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    setMenuHeight(dropdownRef.current?.firstChild.offsetHeight)
-  }, [])
+    setMenuHeight(dropdownRef.current?.firstChild.offsetHeight);
+  }, []);
 
+  /**
+   *
+   * @param {HTMLElement} el
+   */
   function calcHeight(el) {
     const height = el.offsetHeight;
     setMenuHeight(height);
@@ -63,7 +70,11 @@ function DropdownMenu() {
 
   function DropdownItem(props) {
     return (
-      <a href="#" className="menu-item" onClick={() => props.goToMenu && setActiveMenu(props.goToMenu)}>
+      <a
+        href="#"
+        className="menu-item"
+        onClick={() => props.goToMenu && setActiveMenu(props.goToMenu)}
+      >
         <span className="icon-button">{props.leftIcon}</span>
         {props.children}
         <span className="icon-right">{props.rightIcon}</span>
@@ -73,37 +84,39 @@ function DropdownMenu() {
 
   return (
     <div className="dropdown" style={{ height: menuHeight }} ref={dropdownRef}>
-
       <CSSTransition
-        in={activeMenu === 'main'}
-        timeout={500}
+        in={activeMenu === "main"}
+        timeout={CSS_TRANSITION_TIMEOUT}
         classNames="menu-primary"
         unmountOnExit
-        onEnter={calcHeight}>
+        onEnter={calcHeight}
+      >
         <div className="menu">
           <DropdownItem>My Profile</DropdownItem>
           <DropdownItem
             leftIcon={<CogIcon />}
             rightIcon={<ChevronIcon />}
-            goToMenu="settings">
+            goToMenu="settings"
+          >
             Settings
           </DropdownItem>
           <DropdownItem
             leftIcon="🦧"
             rightIcon={<ChevronIcon />}
-            goToMenu="animals">
+            goToMenu="animals"
+          >
             Animals
           </DropdownItem>
-
         </div>
       </CSSTransition>
 
       <CSSTransition
-        in={activeMenu === 'settings'}
-        timeout={500}
+        in={activeMenu === "settings"}
+        timeout={CSS_TRANSITION_TIMEOUT}
         classNames="menu-secondary"
         unmountOnExit
-        onEnter={calcHeight}>
+        onEnter={calcHeight}
+      >
         <div className="menu">
           <DropdownItem goToMenu="main" leftIcon={<ArrowIcon />}>
             <h2>My Tutorial</h2>
@@ -116,11 +129,12 @@ function DropdownMenu() {
       </CSSTransition>
 
       <CSSTransition
-        in={activeMenu === 'animals'}
-        timeout={500}
+        in={activeMenu === "animals"}
+        timeout={CSS_TRANSITION_TIMEOUT}
         classNames="menu-secondary"
         unmountOnExit
-        onEnter={calcHeight}>
+        onEnter={calcHeight}
+      >
         <div className="menu">
           <DropdownItem goToMenu="main" leftIcon={<ArrowIcon />}>
             <h2>Animals</h2>
